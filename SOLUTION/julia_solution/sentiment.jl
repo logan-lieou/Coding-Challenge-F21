@@ -1,45 +1,29 @@
-using Languages
-using Unicode
-using CSV
-using DataFrames
-using Flux
+using TextAnalysis, Clustering
+using Transformers, Transformers.Pretrain, Transformers.Basic
+using Transformers.Basic: Vocabulary
 
-df = DataFrame(CSV.File("data.csv"))
+
+fd = FileDocument("input.txt")
+sd = StringDocument(text(fd))
+
+remove_corrupt_utf8!(sd)
+prepare!(sd, strip_punctuation)
+stem!(sd)
+
+bert_model, wordpiece, tokenizer = pretrain"bert-uncased_L-12_H-768_A-12"
+vocab = Vocabulary(wordpiece)
+
+someText = text(sd) |> tokenizer |> wordpiece
+someText = ["[CLS]"; someText; "[SEP]"]
+
+token_indicies = vocab(someText)
+segment_indices = [fill(1, length(someText)+2)]
+
+data = (tok = token_indicies, segment = segment_indices)
 
 """
-list_stopwords = stopwords(Languages.English())
-
-# data cleaning #
-function remove_stopwords(tokens)
-   filtered_sentence = []
-   for token in tokens
-      if !(lowercase(token) in list_stopwords)
-         push!(filtered_sentence, lowercase(token))
-      end
-   end
-
-   return filtered_sentence
-end
-
-function convert_clean(arr)
-   arr = string.(arr)
-   arr = Unicode.normalize.(arr, stripmark=true)
-   arr = map(x -> replace(x, r"[^a-zA-Z0-9_]" => ""), arr)
-   return arr
-end
+bert_embedding = sample |> bert_model.embed
+feature_tensors = bert_embedding |> bert_model.transformers
 """
 
-model = Chain(
-   LSTM(1024, 512),
-   LSTM(512, 256),
-   LSTM(256, 128),
-   LSTM(128, 10),
-   Dense(10, 2),
-   softmax)
-
-L(x, y) = Flux.mse(model(x), y)
-opt = ADAMW(0.02)
-
-# labels = df[:, "labels"]
-
-@show head(df)
+@show bert_model.embed(data)
