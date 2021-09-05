@@ -1,8 +1,0 @@
-\begin{thebibliography}{1}
-
-\bibitem{opennmt}
-Guillaume Klein, Yoon Kim, Yuntian Deng, Jean Senellart, and Alexander~M. Rush.
-\newblock Opennmt: Open-source toolkit for neural machine translation.
-\newblock In {\em Proc. ACL}, 2017.
-
-\end{thebibliography}
