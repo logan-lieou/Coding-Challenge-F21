@@ -8,3 +8,5 @@ with open("../input.txt", "r") as f:
 sid = SentimentIntensityAnalyzer()
 print(sid.polarity_scores(ss))
 
+
+print(sid.polarity_scores("cock bitch ass motherfucker eat shit pussy boy"))
