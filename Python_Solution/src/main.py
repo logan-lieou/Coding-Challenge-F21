@@ -37,7 +37,7 @@ strs = [clf(string) for string in strs]
 # output our results
 [print(x) for x in strs]
 
-# get average sentiment
+# convert probabilities based on prediction
 sentiment = []
 for x in strs:
     if x[0]['label'] == 'NEGATIVE':
@@ -46,8 +46,8 @@ for x in strs:
         sentiment.append(x[0]['score'])
 
 print(sentiment)
-sentiment = math.fsum(sentiment)
+tendency = math.fsum(sentiment)
 
 # output the sentiment of input.txt
-print("NEGITIVE" if sentiment < 0 else "POSITIVE")
-print(sentiment)
+print("NEGITIVE" if tendency < 0 else "POSITIVE")
+print(f"confidence: {math.abs(math.product(sentiment))}")
