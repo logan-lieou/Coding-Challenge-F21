@@ -1,5 +1,6 @@
 from transformers import pipeline
 import math
+import numpy as np
 
 # using pre trained model = ez
 clf = pipeline("sentiment-analysis")
@@ -50,4 +51,4 @@ tendency = math.fsum(sentiment)
 
 # output the sentiment of input.txt
 print("NEGITIVE" if tendency < 0 else "POSITIVE")
-print(f"confidence: {math.abs(math.product(sentiment))}")
+print(f"confidence: {np.abs(np.prod(sentiment))}")
