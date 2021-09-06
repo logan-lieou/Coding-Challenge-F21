@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex paper"] 1630921860 "paper.aux" "paper.bbl" "paper" 1630921919
+["bibtex paper"] 1630961789 "paper.aux" "paper.bbl" "paper" 1630962215
   "/usr/local/texlive/2021/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   "biblio.bib" 1630903435 1119 850a17097a9dd6dd10f08f62827bac32 ""
-  "paper.aux" 1630921919 1326 feba22c052076c6ebcde4bd5d67fd5c5 "pdflatex"
+  "paper.aux" 1630962213 1101 a7d354391792ed4bc1ceede09279ff79 "pdflatex"
   (generated)
   "paper.blg"
   "paper.bbl"
-["pdflatex"] 1630921919 "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.tex" "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.pdf" "paper" 1630921919
-  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.aux" 1630921919 1326 feba22c052076c6ebcde4bd5d67fd5c5 ""
-  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.tex" 1630921918 12813 75baf1d3636ce65af7d7cf06d90735c7 ""
+["pdflatex"] 1630962213 "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.tex" "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.pdf" "paper" 1630962215
+  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.aux" 1630962213 1101 a7d354391792ed4bc1ceede09279ff79 ""
+  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.tex" 1630962212 12232 75046fd0055fba9760d2a546aca531cf ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -38,12 +38,12 @@
   "/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1616695603 5169178 a2ce6e2d73f603b690db6777d06dbccb ""
   "/usr/local/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1618306875 2724746 68bb40ce2a588a02ec513b6a0d9599f0 ""
   "/usr/local/texlive/2021/texmf.cnf" 1616695596 577 4c1911a7228e554c6032256d3cf5567d ""
-  "paper.aux" 1630921919 1326 feba22c052076c6ebcde4bd5d67fd5c5 "pdflatex"
-  "paper.bbl" 1630921860 129 182254f22b5fa625351afd1b2230c3f5 "bibtex paper"
-  "paper.tex" 1630921918 12813 75baf1d3636ce65af7d7cf06d90735c7 ""
+  "paper.aux" 1630962213 1101 a7d354391792ed4bc1ceede09279ff79 "pdflatex"
+  "paper.bbl" 1630961790 129 182254f22b5fa625351afd1b2230c3f5 "bibtex paper"
+  "paper.tex" 1630962212 12232 75046fd0055fba9760d2a546aca531cf ""
   (generated)
-  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.pdf"
-  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.log"
   "paper.log"
+  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.log"
   "paper.aux"
+  "/Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.pdf"
   "paper.pdf"

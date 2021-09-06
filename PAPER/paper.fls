@@ -55,12 +55,12 @@ OUTPUT /Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.pd
 INPUT /usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
+INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
