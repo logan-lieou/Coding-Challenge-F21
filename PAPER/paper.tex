@@ -8,60 +8,24 @@
 
 \newpage
 \section{Original Approach}
-In the Python solution the approach was originally going to be just to
-take the entire input.txt file and feed it into the model. But unfortuntely
-that didn't work. So on the second try I decided to split up the contents
-of input.txt and pass parts of the file to the model one at a time. This
-is what I decided to do this is really bad because transformers rely on
-context of past words in the document to be fed back into the transformer
-in order for it to learn. But since I am too lazy to write my own transformer
-I decided to take the laziest approach possible which was previouslly described.
-Now with this terrible approach the question was how to interpret the outputs
-in a way that was actually valid. Based on the architecture of a Transformer ~\cite{opennmt}
-we know that the output of our pretrained model is probabilities.
-in the case of distilbert this is the probability the 
-model belives that it is correct, aka it's confidence in it's predictions.
-Now since we have a bunch of outputs from diffrent parts of the file we need to 
-figure out the overall sentiment of the file. The way I did this I am not sure
-if it's correct but by summing the probabilities we are able to determine the 
-tendency of the distrobution of confidence, negitive predictions are negitive,
-and positive predictions are positive, if across the file the model is more confident
-about positive prediction the value of $$\bigcup{P(x)}$$ will be positive otherwise
-it will be negitive. The approach is potentially problematic due to the question of
-mutal exclusivity can a sentence be both positive and negitive or true neutral? For the sake
-of this I assume the model will always predict one or the other never both making the options 
-mutally exclusive.
-Now for the way that I calculated the confidence of the model $$\bigcap{P(x)}$$
-This I belive is an invalid approach for the following reasons:
-because the transformer relies on context from the rest of the file each individal batch
-sentiment could potentially be affected by previous context this means that the pobabilites 
-of each batch are not independent of one another, this is a problem when dealing with
-an and operation. The product of all sentiments doesn't repersent the overall confidence of the 
-model because each probability would have to be independent. This problem will most likely be
-addressed in the next model.
+In the Python solution the approach was originally going to be just to take the entire input.txt file and feed it into a pre-trained transformer. But unfortunately that didn't work. So on the second try I decided to split up the contents of input.txt and pass parts of the file to the model one at a time. This is problematic due to the way Transformers work, Transformers are highly reliant on context, and due to this process of splitting up the file I am denying that context to the transformer thus having to process each string individually giving less accurate results.
 
-\newpage
+The next problem we face with this approach is how to interpret the outputs in a way that is valid, the output of distilbert is the probability that the input matches a label this is basically the model’s confidence in its prediction i.e. an output of 0.99 is very confident and an output of 0.5 is the model being unsure. Attached to the confidence is a label, or the prediction of of whether the sentiment is positive or negative this is why the lower bound is 0.5 because after a probability of 0.5 it will just swap to predicting the other option. Throughout the input we see that the model fluctuates between positive and negative predictions. The way I get the overall sentiment of the input is by adding all positive predictions to all negative predictions, where positive predictions are positive and negative predictions are negative, the result will give me which predictions the model has more of.
+
 \section{Numbers}
-There are two numbers associated with the model output that I previouslly discussed but as I explained
-earlier one of those numbers I belive to be invalid so there is only one number to talk about.
-that is: $$ \bigcup{P(x)} = 0.022 $$ where $P(x)$ repersents the output of each batch.
-The tendency of the transformer is to have $2.2\%$ more confidence in positive results
-than negitive results
-meaning that overall it belives the file to be slightly positive.
+Using the approach I previously discussed we obtain the number 0.022 meaning that the model is tending slightly towards it’s positive predictions. Since each prediction will be positive or negative the sum could be very positive or very negative, actually there is no bound to how positive or negative a result can be therefore we need to squish the result, I do this using tanh if we have a input that is super, super positive say every sentence is 0.99 positive and there’s 100 sentences that means score is 99 by squishing this value with a tanh function we are able to find that this same value is just extremely close to 1.0 this process of squishing is called normalization and is commonly used to make unbounded outputs make sense. Passing the sum of output probabilities, to the tanh function we get 0.022 this normalized score is the exact same as our previous score, well it’s actually really close it’s not exactly 0.022 it’s more like 0.02199 but the score is very close to 0.022 so for convenience and rounding I will say that our normalized score is 0.022 based on this we can conclude that the sentiment of the input is slightly more positive than negative.
 
 \section{Potential Fixes}
-I think this approach is actual garbage, but if you can embed the output of the previous batch
-with the input of the next batch that would probably work and is probably how it's supposed to work.
-something like this:
+I think this approach is potentially problematic for highly context dependent inputs, but if you can embed the output of the previous batch with the input of the next this would solve the problem.
 \begin{verbatim}
-   previous_context = None
-   for i in range(len(strs)):
-      # second arg optional passing None doesn't do anything
-      res = clf(strs[i], previous_context) 
-      previous_context = res[0]['score']
-   return res
+previous_context = None
+for i in range(len(strs)):
+   # second arg optional passing None doesn't do anything
+   res = clf(strs[i], previous_context) 
+   previous_context = res[0]['score']
+return res
 
-   $ res = {'POSITIVE', 0.899999}
+$ res = {'POSITIVE', 0.899999}
 \end{verbatim}
 
 \newpage
@@ -209,6 +173,10 @@ probability that it's negitive in this case we may get something like "positive"
 model predicts that the sentence has a 99\% chance of being positive.
 
 \section{Conclusion}
+The best solution was probably the transformer, but unfortuntely I had no time. Based on the other results of Naive Bayes, VADER, and dilbert
+I can conclude that input.txt file is mostly nuetral with a tendency towards positive sentiment. After reading the input myself I agree with
+the models the begining of the file is nuetral/positive then there's one part that could be negitive near the begining middle then after that
+the rest seems to be nuetral/positive.
 
 \newpage
 \bibliography{biblio.bib}{}
