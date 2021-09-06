@@ -354,7 +354,7 @@ class SentimentIntensityAnalyzer:
 
         sentiments = self._but_check(words_and_emoticons, sentiments)
 
-        return self.score_valence(sentiments, text), sentiments
+        return self.score_valence(sentiments, text)
 
     def sentiment_valence(self, valence, sentitext, item, i, sentiments):
         is_cap_diff = sentitext.is_cap_diff
@@ -574,7 +574,7 @@ class SentimentIntensityAnalyzer:
             elif sum_s < 0:
                 sum_s -= punct_emph_amplifier
 
-            compound = self.constants.normalize(sum_s)
+            compound = self.constants.normalize(sum_s/len(sentiments))
             # discriminate between positive, negative and neutral sentiment scores
             pos_sum, neg_sum, neu_count = self._sift_sentiment_scores(sentiments)
 
