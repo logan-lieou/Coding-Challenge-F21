@@ -11,6 +11,10 @@ csid = vader.SentimentIntensityAnalyzer()
 sid = SentimentIntensityAnalyzer()
 polarity, senti = csid.polarity_scores(ss)
 
-print(math.fsum(senti))
+# hacked
+x = math.fsum(senti)/len(senti)
+senti = x/math.sqrt(x+15)
+
+print(f"overall sentiment: {round(senti, 4)}")
 print(polarity)
 print(sid.polarity_scores(ss))

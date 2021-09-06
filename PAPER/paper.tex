@@ -7,7 +7,7 @@
 \maketitle{}
 
 \newpage
-\section{Approach}
+\section{Original Approach}
 In the Python solution the approach was originally going to be just to
 take the entire input.txt file and feed it into the model. But unfortuntely
 that didn't work. So on the second try I decided to split up the contents
@@ -28,7 +28,7 @@ tendency of the distrobution of confidence, negitive predictions are negitive,
 and positive predictions are positive, if across the file the model is more confident
 about positive prediction the value of $$\bigcup{P(x)}$$ will be positive otherwise
 it will be negitive. The approach is potentially problematic due to the question of
-mutal exclusivity can a sentence be both positive and negitive or true nuetral? For the sake
+mutal exclusivity can a sentence be both positive and negitive or true neutral? For the sake
 of this I assume the model will always predict one or the other never both making the options 
 mutally exclusive.
 Now for the way that I calculated the confidence of the model $$\bigcap{P(x)}$$
@@ -65,6 +65,82 @@ something like this:
 \end{verbatim}
 
 \newpage
+\section{VADER Approach and Numbers}
+The pretrained model thinks \{'neg': 0.065, 'neu': 0.748, 'pos': 0.187, 'compound': 0.9982\}
+this means 6.5\% of the text has a negitive valence
+score 74\% has a neutral valence score and 18\% has a positive
+valence score.
+the model seems to belive that the text is mostly neutral
+now the issue here lies in "compound score"
+on the vaderSentiment github page it says:
+\begin{verbatim}
+positive sentiment: compound score >= 0.05
+neutral sentiment: (0.05 < compound score > -0.05) 
+negative sentiment: compound score <= -0.05
+\end{verbatim}
+This is not repersentitive of what compound score actually is while looking
+at the source code ~\cite{vadercode} % TODO
+you can find how the compound score is actually calculated, based on our
+output above it implies that the input is very positive. But based on 
+the way that compound score is actually calculated. We see that this is
+not the case.
+
+$$
+\frac{sum_s}{\sqrt{sum_s+\alpha}}, sum_s = \Sigma{}p_i n_i
+$$
+
+the problem lies in the way that VADER works and how it handles neutral
+sentiment. Due to the way valence score works VADER will have the tendency
+to produce true neutral results, a word will have +4, then another word -4 ~\cite{vadercode} % TODO
+this is also another issue with VADER it's based on individal words predetermined
+sentiment score meaning that VADER doesn't adapt sentiment scores based on context
+this is problematic when dealing with larger inputs where sentiment may be highly varied
+and context reliant. So back to the issue of our compound score.
+Since the score is 0.99 you would expect the overall sentiment of the paper to be
+extremely positive but when looking at the break down of the percent of the paper
+that is positive negitive and neutral, we can see that the paper is mostly
+labeled neutral and having more positive than negitive so if anything the overall
+sentiment of the paper should be slightly positive but not extremely positive.
+
+So you may be wondering how do I know that a score of 0.99 is extremely positive?
+this is due to the normalization function presented above what the normalization
+does is effectively "squish" the score to be between -1 and 1, where -1 is very 
+negative and 1 being very positive. In theory this works by having each paragraph
+be labeled either positive or negitive and if you take the sum of all positives and
+negitives then squish it to a scale based on the hyper parameter $\alpha$ you
+should get the overall sentiment of the paper. The problem lies in the way that it
+handles neutral scores, because it's a sum neutral scores are entirely ignored
+so even if a paper is mostly neutral say 99\% neutral and 1\% positive the compound
+score will come out to be 0.99 an extremely positive score. 
+
+So what does this number actually repersent
+if it doesn't repersent the overall sentiment of the paper due to the fact
+that it doesn't take into account
+neutral scores, and how do we fix this? The first question of what it repersents
+is pretty easy it repersents the normalized sum of positive and negitive sentiments 
+across an input, once again this is invalid because it doesn't take into account
+neutral seniments by virtue of it being a sum. Second how do we fix this? Well
+you can actually weight the neutral scores by averaging the valence scores rather
+than adding them together.
+
+$$
+score_{avg} = \frac{sentiment}{numInputs}, 
+compoundScore\frac{score_{avg}}{\sqrt{score_{avg} + \alpha}}
+$$
+
+The reason we normalize this sum is because if a paper is extremely positive 
+or extremely negitive we will get an average score of $>1$ or $<-1$, thus why we
+have to normalize the score. This is the main reason why the nltk solution
+contains a fork of the vader source code because I had to modify the model in order
+to get a number that was repersentitive of the overall sentiment of the input.
+After all of this the sentiment score is $0.025$ or within $\pm0.05$ of $0.0$ giving
+us a slightly positive but overall nuetral score.
+
+\newpage
+\section{Pytorch + BERT Approach}
+
+\newpage
 \bibliography{biblio.bib}{}
 \bibliographystyle{plain}
+
 \end{document}
