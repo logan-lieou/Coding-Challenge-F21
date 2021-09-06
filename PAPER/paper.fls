@@ -68,6 +68,7 @@ INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
+INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.bbl
 INPUT /Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.bbl
 INPUT /Users/loganj/Projects/Julia_Projects/Coding-Challenge-F21/PAPER/paper.bbl

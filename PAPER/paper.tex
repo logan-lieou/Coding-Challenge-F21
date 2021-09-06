@@ -79,7 +79,7 @@ neutral sentiment: (0.05 < compound score > -0.05)
 negative sentiment: compound score <= -0.05
 \end{verbatim}
 This is not repersentitive of what compound score actually is while looking
-at the source code ~\cite{vadercode} % TODO
+at the source code ~\cite{vadercode}
 you can find how the compound score is actually calculated, based on our
 output above it implies that the input is very positive. But based on 
 the way that compound score is actually calculated. We see that this is
@@ -91,7 +91,7 @@ $$
 
 the problem lies in the way that VADER works and how it handles neutral
 sentiment. Due to the way valence score works VADER will have the tendency
-to produce true neutral results, a word will have +4, then another word -4 ~\cite{vadercode} % TODO
+to produce true neutral results, a word will have +4, then another word -4 ~\cite{vadercode}
 this is also another issue with VADER it's based on individal words predetermined
 sentiment score meaning that VADER doesn't adapt sentiment scores based on context
 this is problematic when dealing with larger inputs where sentiment may be highly varied
@@ -141,7 +141,74 @@ us a slightly positive but overall nuetral score.
 Yeah so the model took to long to train.
 
 \newpage
-\section{Native Bayes Approach}
+\section{Naive Bayes Approach}
+This is the solution that I was able to do in julia as implementing a transformer then training it was taking too long I decided
+to use Naive Bayes instead, this is built into a convient library in julia called TextAnalysis. Naive Bayes uses statistical infrence 
+in order to determine the probability of an event given another event. There's an entire paper on why Naive Bayes seems to work
+so well for sentiment analysis but I'm not going to go too much into it here basiclly know that Naive Bayes is really 
+really jank. Luckily our input seemed to have worked fairly well with the model I trained, although there are known issues with
+this model.
+\subsection{Data and Cleaning}
+For the training I'm using the SST2 dataset ~\cite{} % TODO
+I produce a csv file for training with a python script called data.py that just appends the words to the sentiment scores.
+After that I read in the csv file to julia and do some magic.
+\begin{verbatim}
+function preprocess_sst2(df)
+   df = df[:, ["body_text", "sentiment values"]]
+	rename!(df, ["text", "sentiment"])
+   sentiments = map((x) -> x >= 0.5 ? "negative" : "positive",
+                    df.sentiment)
+   return df.text, sentiments, unique(sentiments)
+end
+\end{verbatim}
+I used explore.jl to figure out what I needed to do to clean the data then used this function to get the things I needed for training
+the Naive Bayes model. There's another function in the file for cleaning a twitter dataset but the model was overwhelmingly negitive
+so I decided to use SST2 instead. What's going on here is that I select the columns I want, the text and sentiment columns, then I
+rename the columns for easy access. Next I map over the sentiment values and label each as either positive or negitive, we'll come
+back to this later. Lastly the function returns the text, sentiments (array of labels), and unique(sentiments). We can think of
+unique(sentiments) as being the A and B in, $P(A)$ and $P(B)$.
+
+\subsection{Training the Model}
+For training the model we have a simple function.
+\begin{verbatim}
+model = let
+   nbc = NaiveBayesClassifier(uniques)
+      for (text, label) in zip(texts, labels)
+         sd = prepare_string_doc(text)
+         fit!(nbc, text, label)
+      end
+   nbc
+end
+\end{verbatim}
+All the function is doing is taking in the possible events (A, B as mentioned before) then iterating over all the words and
+all the labels in our dataset.
+
+\subsection{Numbers}
+The output of the model is $0.995$ what does this mean? This means the model belives there is a $99.5\%$ probability the input is
+positive. How I got here here is that I summed all of the probabilities of positive and negitive events similar to how VADER works except
+instead of a valence score it's a probability in a particular classification. So you may be wondering how I delt with the nuetrality problem
+what if a score is nuetral say 0.5 which would be true nuetral for this model well the answer is jank you just ignore it, instead of saying
+0.5 was true nuetral it's actually positive, and less than 0.5 is negitive this allows us to sum positive and negitive probabilities
+this model also relies on the idea that in any given input space there is $<\alpha$ true nuetral sentiments, which is often true $\alpha$ in
+this case is repersentitive of arbitrary statistical confidence in a result. After we sum the probabilities we get some crazy unbounded value
+that is repersentitive of the probability that the sentiment is either positive or negitive in an unbounded distrobution. We normalize the value
+using tanh -1 being most negitive and +1 being most positive. Our output is then the probability of either
+positive or negitive in a normalized space. * I HAVE NO IDEA IF THIS IS TRUE
+$$
+score = tanh(\Sigma{}A_i B_i)
+$$
+
+\subsection{Naive Bayes vs VADER}
+You may be thinking what makes our score diffrent from valence score in VADER and why it's okay for this model to have
+an output like $0.995$ positive but it's not okay for VADER to have that same output. Do the problems with VADER simply
+not apply to this model? So yes the problems with VADER do not apply here the reason is our model is outputting a probability
+where as VADER's valence score is outputting the strength of a particular sentiment. Let's say a word is +4 another word is -3
+then the valence score is 1 a max valence score is $\pm15$ this score normalized is 0.25 what this means is that the sentiment 
+is decently positive. But with our model we take those two words as inputs and output the probability that it's positive and the
+probability that it's negitive in this case we may get something like "positive" $\rightarrow$ 0.99, "negitive" $\rightarrow$ 0.01, meaning that our
+model predicts that the sentence has a 99\% chance of being positive.
+
+\section{Conclusion}
 
 \newpage
 \bibliography{biblio.bib}{}
