@@ -15,19 +15,6 @@ The next problem we face with this approach is how to interpret the outputs in a
 \section{Numbers}
 Using the approach I previously discussed we obtain the number 0.022 meaning that the model is tending slightly towards it’s positive predictions. Since each prediction will be positive or negative the sum could be very positive or very negative, actually there is no bound to how positive or negative a result can be therefore we need to squish the result, I do this using tanh if we have a input that is super, super positive say every sentence is 0.99 positive and there’s 100 sentences that means score is 99 by squishing this value with a tanh function we are able to find that this same value is just extremely close to 1.0 this process of squishing is called normalization and is commonly used to make unbounded outputs make sense. Passing the sum of output probabilities, to the tanh function we get 0.022 this normalized score is the exact same as our previous score, well it’s actually really close it’s not exactly 0.022 it’s more like 0.02199 but the score is very close to 0.022 so for convenience and rounding I will say that our normalized score is 0.022 based on this we can conclude that the sentiment of the input is slightly more positive than negative.
 
-\section{Potential Fixes}
-I think this approach is potentially problematic for highly context dependent inputs, but if you can embed the output of the previous batch with the input of the next this would solve the problem.
-\begin{verbatim}
-previous_context = None
-for i in range(len(strs)):
-   # second arg optional passing None doesn't do anything
-   res = clf(strs[i], previous_context) 
-   previous_context = res[0]['score']
-return res
-
-$ res = {'POSITIVE', 0.899999}
-\end{verbatim}
-
 \newpage
 \section{VADER Approach and Numbers}
 The pretrained model thinks \{'neg': 0.065, 'neu': 0.748, 'pos': 0.187, 'compound': 0.9982\}
